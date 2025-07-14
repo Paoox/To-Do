@@ -1,58 +1,78 @@
-# 📝 To-do App con Spring Boot + PostgreSQL + Docker
+# 🌟 Mini Red Social con Spring Boot + PostgreSQL + Docker
 
-Este proyecto es una aplicación **CRUD de tareas (todo app)** desarrollada con **Spring Boot** y **PostgreSQL**, completamente contenida con **Docker**. Su objetivo es servir como base para proyectos backend más complejos, permitiendo practicar buenas prácticas de desarrollo, configuración de base de datos y despliegue con contenedores.
+Este proyecto es una **mini red social** construida desde cero como parte de mi portafolio **fullstack**, usando **Java con Spring Boot** en el backend, **PostgreSQL** como base de datos, y todo totalmente contenido con **Docker**.  
+Aquí puedes crear publicaciones, dar corazones 💖, ver perfiles de usuario y (muy pronto) enviar solicitudes de amistad 🤝.
 
 ---
 
 ## 🚀 ¿Qué hace esta app?
 
 Esta aplicación permite:
-- Crear, leer, actualizar y eliminar tareas.
-- Conectar a una base de datos PostgreSQL desde Spring Boot.
-- Usar contenedores para evitar instalaciones locales complicadas.
+- Crear, leer, actualizar y eliminar publicaciones (`Post`).
+- Asociar cada post a un usuario con imagen de perfil.
+- Dar likes (💖) a publicaciones como en una red social.
+- Gestionar usuarios y sus relaciones.
+- Simular funciones sociales como agregar amistades. *(Próximamente)*
 
 ---
 
 ## 🧠 ¿Para qué sirve?
 
 Este proyecto está diseñado para:
-- Practicar integración de backend con base de datos.
-- Aprender a contenerizar proyectos Java con Docker.
-- Construir una base sólida para proyectos reales o para portafolio profesional.
+- Demostrar habilidades como **desarrolladora fullstack**.
+- Mostrar relaciones entre entidades con JPA.
+- Practicar APIs REST bien estructuradas.
+- Usar Docker para desarrollo profesional.
+- Servir como base para otros proyectos o MVPs más complejos.
 
 ---
 
 ## 🧰 Tecnologías usadas
 
-| Herramienta         | Uso principal                                 |
-|---------------------|-----------------------------------------------|
-| **Java 17**         | Lenguaje base de la aplicación                |
-| **Spring Boot**     | Framework principal del backend (versión 3.5) |
-| **PostgreSQL**      | Base de datos relacional                      |
-| **Docker / Compose**| Contenerización de app y base de datos        |
-| **Maven**           | Manejo de dependencias y construcción         |
-| **GitHub**          | Control de versiones y repositorio remoto     |
-| **IntelliJ IDEA**   | IDE de desarrollo principal                   |
+| Herramienta         | Uso principal                                       |
+|---------------------|-----------------------------------------------------|
+| **Java 17**         | Lenguaje base de la aplicación                      |
+| **Spring Boot**     | Framework backend (versión 3.5)                     |
+| **PostgreSQL**      | Base de datos relacional                            |
+| **Docker / Compose**| Contenerización de la app y base de datos           |
+| **Maven**           | Gestión de dependencias y construcción del proyecto |
+| **HTML + JS**       | Frontend básico para interacción                    |
+| **GitHub**          | Control de versiones y visibilidad pública          |
+| **IntelliJ IDEA**   | IDE de desarrollo principal                         |
 
 ---
 
 ## 🏗️ Estructura del proyecto
 
-```to-do/
+```red-social/
 ├── src/
-│ ├── main/
-│ │ ├── java/com/paola/todo/
-│ │ │ ├── controller/ # Endpoints REST (CRUD)
-│ │ │ ├── model/ # Entidades (tablas de BD)
-│ │ │ ├── repository/ # Acceso a datos (JPA)
-│ │ │ └── TodoApplication.java # Clase principal (main)
-│ │ └── resources/
-│ │ └── application.properties # Configuración de Spring y DB
-├── Dockerfile # Imagen de la app
-├── docker-compose.yml # App + PostgreSQL juntos en Docker
-├── pom.xml # Dependencias con Maven
-└── README.md # Este archivo ✨
+│   └── main/
+│       ├── java/com/paola/redsocial/
+│       │   ├── controller/        # Endpoints REST (usuarios, posts, likes)
+│       │   ├── model/             # Entidades: Usuario, Post, Like, Amistad
+│       │   ├── repository/        # Interfaces JPA
+│       │   └── RedSocialApp.java  # Clase main
+│       └── resources/
+│           └── application.properties  # Config DB y Spring
+├── Dockerfile              # Imagen Docker de la app
+├── docker-compose.yml      # Orquesta app + PostgreSQL
+├── rebuild.ps1 / .sh       # Script para recompilar y levantar servicios
+├── pom.xml                 # Dependencias Maven
+└── README.md               # Este archivo ✨
+```
 
+🎨 Vista del frontend (en progreso)
+Un frontend sencillo que permite:
+
+Ver publicaciones en formato "feed"
+
+Dar likes con 💖
+
+Ver perfil de cada usuario
+
+Agregar solicitudes de amistad (proximamente)
 
 ✨ Autor
-Desarrollado por Paola Arreola (PaooxDev) 🚀
+Desarrollado por Paola Arreola (@PaooxDev) como parte de su portafolio fullstack 🚀
+Buscando oportunidades para seguir creciendo como desarrolladora backend o fullstack 💼💻
+

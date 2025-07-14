@@ -2,9 +2,16 @@ package com.paola.todo.model;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.AllArgsConstructor;
+
 
 //le dice a spring que esta clase sera una tabla en la bd
 @Entity
+//crea constructor vacio
+@NoArgsConstructor
+//constructor con todos los campos
+@AllArgsConstructor
 //nombre de la tabla
 @Table(name = "usuarios")
 @Data
