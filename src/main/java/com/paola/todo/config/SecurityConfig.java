@@ -6,6 +6,8 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.web.servlet.config.annotation.*;
 
 @Configuration
 public class SecurityConfig {
@@ -27,5 +29,16 @@ public class SecurityConfig {
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
+    }
+
+    @Configuration
+    public class WebConfig implements WebMvcConfigurer {
+
+        @Override
+        public void addResourceHandlers(ResourceHandlerRegistry registry) {
+            // Permite servir archivos de /uploads
+            registry.addResourceHandler("/uploads/**")
+                    .addResourceLocations("file:uploads/");
+        }
     }
 }

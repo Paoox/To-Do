@@ -18,8 +18,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import io.jsonwebtoken.security.Keys;
 
+import io.jsonwebtoken.security.Keys;
 
 @RestController
 @RequestMapping("/usuarios")
@@ -49,26 +49,36 @@ public class UsuarioController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
-    // Crear un nuevo usuario (con contraseña encriptada)
+    // Crear nuevo usuario con contraseña encriptada
     @PostMapping
     public Usuario crearUsuario(@RequestBody Usuario usuario) {
         usuario.setPassword(passwordEncoder.encode(usuario.getPassword()));
-        System.out.println("🚨 Password recibido: " + usuario.getPassword());
         return usuarioRepository.save(usuario);
     }
 
-    // Actualizar un usuario existente
+    // Actualizar un usuario
+    // Actualizar un usuario
     @PutMapping("/{id}")
     public ResponseEntity<Usuario> actualizarUsuario(@PathVariable Long id, @RequestBody Usuario datosActualizados) {
         return usuarioRepository.findById(id)
                 .map(usuario -> {
                     usuario.setNombre(datosActualizados.getNombre());
-                    usuario.setEmail(datosActualizados.getEmail());
-                    usuario.setPassword(passwordEncoder.encode(datosActualizados.getPassword()));
+                    usuario.setNickname(datosActualizados.getNickname());
+                    usuario.setTelefono(datosActualizados.getTelefono());
+                    usuario.setAvatarUrl(datosActualizados.getAvatarUrl());
+                    usuario.setDescripcion(datosActualizados.getDescripcion());
+
+                    // Solo encripta y actualiza la contraseña si viene en la petición
+                    if (datosActualizados.getPassword() != null && !datosActualizados.getPassword().isEmpty()) {
+                        usuario.setPassword(passwordEncoder.encode(datosActualizados.getPassword()));
+                    }
+
                     return ResponseEntity.ok(usuarioRepository.save(usuario));
                 })
                 .orElse(ResponseEntity.notFound().build());
     }
+
+
 
     // Eliminar un usuario
     @DeleteMapping("/{id}")
@@ -81,21 +91,13 @@ public class UsuarioController {
         }
     }
 
-    //Login
+    // Login de usuario
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody LoginRequest request) {
-        // ✅ Limpiar espacios invisibles de email y password
         String email = request.getEmail().trim();
         String password = request.getPassword().trim();
 
-        // ✅ Imprimir en consola lo que llega (útil para depuración temporal)
-        System.out.println("📥 Email recibido: " + email);
-        System.out.println("📥 Password recibido: " + password);
-
-        // 🔍 Buscar usuario por email limpio
         Optional<Usuario> optionalUsuario = usuarioRepository.findByEmail(email);
-
-        // ❌ Si no existe, devolvemos error en formato JSON
         if (!optionalUsuario.isPresent()) {
             Map<String, String> error = new HashMap<>();
             error.put("error", "Usuario no encontrado");
@@ -103,15 +105,12 @@ public class UsuarioController {
         }
 
         Usuario usuario = optionalUsuario.get();
-
-        // ❌ Si la contraseña no coincide, también devolvemos JSON
         if (!passwordEncoder.matches(password, usuario.getPassword())) {
             Map<String, String> error = new HashMap<>();
             error.put("error", "Contraseña incorrecta");
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(error);
         }
 
-        // ✅ Generar token JWT válido por 1 día
         String token = Jwts.builder()
                 .setSubject(usuario.getEmail())
                 .claim("nombre", usuario.getNombre())
@@ -121,7 +120,6 @@ public class UsuarioController {
                 .signWith(Keys.hmacShaKeyFor(JWT_SECRET), SignatureAlgorithm.HS256)
                 .compact();
 
-        // ✅ Crear objeto seguro del usuario (sin contraseña)
         Map<String, Object> usuarioSeguro = new HashMap<>();
         usuarioSeguro.put("id", usuario.getId());
         usuarioSeguro.put("nombre", usuario.getNombre());
@@ -131,11 +129,48 @@ public class UsuarioController {
         usuarioSeguro.put("avatarUrl", usuario.getAvatarUrl());
         usuarioSeguro.put("fechaRegistro", usuario.getFechaRegistro().toString());
 
-        // ✅ Armar respuesta con token y usuario
         Map<String, Object> response = new HashMap<>();
         response.put("token", token);
         response.put("usuario", usuarioSeguro);
 
         return ResponseEntity.ok(response);
+    }
+
+    // ✅ DTO para resetear contraseña (solo email y nueva contraseña)
+    public static class ResetPasswordRequest {
+        public String email;
+        public String newPassword;
+    }
+
+    // 🔐 Endpoint para restablecer la contraseña
+    @PutMapping("/reset-password")
+    public ResponseEntity<?> resetPassword(@RequestBody ResetPasswordRequest request) {
+        String email = request.email.trim();
+        String nuevaPassword = request.newPassword.trim();
+
+        Optional<Usuario> optionalUsuario = usuarioRepository.findByEmail(email);
+        if (!optionalUsuario.isPresent()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body("Usuario con ese correo no encontrado.");
+        }
+
+        Usuario usuario = optionalUsuario.get();
+        usuario.setPassword(passwordEncoder.encode(nuevaPassword));
+        usuarioRepository.save(usuario);
+
+        System.out.println("🔁 Contraseña restablecida para: " + email);
+
+        return ResponseEntity.ok("Contraseña actualizada correctamente.");
+    }
+
+    // 📩 Verifica si existe un correo (opcional)
+    @GetMapping("/email/{email}")
+    public ResponseEntity<?> verificarCorreo(@PathVariable String email) {
+        Optional<Usuario> usuario = usuarioRepository.findByEmail(email.trim());
+        if (usuario.isPresent()) {
+            return ResponseEntity.ok("Correo válido");
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Correo no encontrado");
+        }
     }
 }
