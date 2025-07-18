@@ -10,6 +10,7 @@ public class Publicacion {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(columnDefinition = "TEXT")
     private String contenido;
 
     private String imagenUrl;
@@ -26,30 +27,23 @@ public class Publicacion {
 
     // Getters y setters
     public Long getId() { return id; }
-
     public void setId(Long id) { this.id = id; }
 
     public String getContenido() { return contenido; }
-
     public void setContenido(String contenido) { this.contenido = contenido; }
 
     public String getImagenUrl() { return imagenUrl; }
-
     public void setImagenUrl(String imagenUrl) { this.imagenUrl = imagenUrl; }
 
     public LocalDateTime getFechaCreacion() { return fechaCreacion; }
-
     public void setFechaCreacion(LocalDateTime fechaCreacion) { this.fechaCreacion = fechaCreacion; }
 
     public int getLikes() { return likes; }
-
     public void setLikes(int likes) { this.likes = likes; }
 
     public int getReacciones() { return reacciones; }
-
     public void setReacciones(int reacciones) { this.reacciones = reacciones; }
 
     public Usuario getUsuario() { return usuario; }
-
     public void setUsuario(Usuario usuario) { this.usuario = usuario; }
 }
