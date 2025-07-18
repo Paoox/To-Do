@@ -29,6 +29,9 @@ services:
       SPRING_JPA_SHOW_SQL: "true"
       SPRING_SQL_INIT_MODE: never
       SPRING_JPA_PROPERTIES_HIBERNATE_DIALECT: org.hibernate.dialect.PostgreSQLDialect
+    volumes:
+      - ./uploads:/app/uploads  # ✅ Montar carpeta local para guardar imágenes
 
 volumes:
   pgdata:
+    name: todo_pgdata

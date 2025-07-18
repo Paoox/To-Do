@@ -5,8 +5,10 @@ import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.AllArgsConstructor;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Table(name = "usuarios")
@@ -14,6 +16,10 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Usuario {
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Publicacion> publicaciones;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -25,7 +31,7 @@ public class Usuario {
     private String email;
 
     @Column(nullable = false)
-    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY) // 🔐 El password no se expone al hacer GET
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String password;
 
     private String telefono;
@@ -39,15 +45,9 @@ public class Usuario {
 
     private String descripcion;
 
-    // 🌐 Este campo es opcional si usas avatar.getUrl(), pero lo dejamos por compatibilidad
     private String avatarUrl;
 
-    // 🔗 Relación con la tabla Avatar (avatar_id es la FK en usuarios)
     @OneToOne
     @JoinColumn(name = "avatar_id")
     private Avatar avatar;
-
-    @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL, orphanRemoval = true)
-    private java.util.List<Publicacion> publicaciones;
-
 }

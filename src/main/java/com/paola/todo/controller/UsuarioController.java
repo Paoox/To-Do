@@ -57,7 +57,6 @@ public class UsuarioController {
     }
 
     // Actualizar un usuario
-    // Actualizar un usuario
     @PutMapping("/{id}")
     public ResponseEntity<Usuario> actualizarUsuario(@PathVariable Long id, @RequestBody Usuario datosActualizados) {
         return usuarioRepository.findById(id)
