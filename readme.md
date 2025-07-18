@@ -1,78 +1,93 @@
-# 🌟 Mini Red Social con Spring Boot + PostgreSQL + Docker
+# 🌐 Mini Red Social - Backend Spring Boot + PostgreSQL + Docker
 
-Este proyecto es una **mini red social** construida desde cero como parte de mi portafolio **fullstack**, usando **Java con Spring Boot** en el backend, **PostgreSQL** como base de datos, y todo totalmente contenido con **Docker**.  
-Aquí puedes crear publicaciones, dar corazones 💖, ver perfiles de usuario y (muy pronto) enviar solicitudes de amistad 🤝.
+Este es el **backend completo** de una mini red social desarrollada con **Java + Spring Boot 3.5**, conectada a **PostgreSQL** y contenerizada con **Docker**, como parte del portafolio profesional de **Paola Arreola (@PaooxDev)**.
 
----
-
-## 🚀 ¿Qué hace esta app?
-
-Esta aplicación permite:
-- Crear, leer, actualizar y eliminar publicaciones (`Post`).
-- Asociar cada post a un usuario con imagen de perfil.
-- Dar likes (💖) a publicaciones como en una red social.
-- Gestionar usuarios y sus relaciones.
-- Simular funciones sociales como agregar amistades. *(Próximamente)*
+🧠 Esta app simula el funcionamiento básico de una red social: publicaciones con imagen, perfiles de usuario, likes y reacciones. Perfecta como base para proyectos más grandes.
 
 ---
 
-## 🧠 ¿Para qué sirve?
+## 🚀 Funcionalidades implementadas
 
-Este proyecto está diseñado para:
-- Demostrar habilidades como **desarrolladora fullstack**.
-- Mostrar relaciones entre entidades con JPA.
-- Practicar APIs REST bien estructuradas.
-- Usar Docker para desarrollo profesional.
-- Servir como base para otros proyectos o MVPs más complejos.
-
----
-
-## 🧰 Tecnologías usadas
-
-| Herramienta         | Uso principal                                       |
-|---------------------|-----------------------------------------------------|
-| **Java 17**         | Lenguaje base de la aplicación                      |
-| **Spring Boot**     | Framework backend (versión 3.5)                     |
-| **PostgreSQL**      | Base de datos relacional                            |
-| **Docker / Compose**| Contenerización de la app y base de datos           |
-| **Maven**           | Gestión de dependencias y construcción del proyecto |
-| **HTML + JS**       | Frontend básico para interacción                    |
-| **GitHub**          | Control de versiones y visibilidad pública          |
-| **IntelliJ IDEA**   | IDE de desarrollo principal                         |
+✅ Crear, editar y eliminar publicaciones (con o sin imagen)  
+✅ Subida real de imágenes a la carpeta `/uploads`  
+✅ Visualización de publicaciones con imagen y emojis  
+✅ Reacciones y likes a publicaciones  
+✅ Vista de perfil personalizada (propio o de otro usuario)  
+✅ Gestión completa de usuarios con avatar  
+✅ Servido desde backend vía API REST  
+✅ Contenerizado con Docker (Spring + PostgreSQL)
 
 ---
 
-## 🏗️ Estructura del proyecto
+## 🧰 Tecnologías utilizadas
 
-```red-social/
+| Herramienta             | Rol en el proyecto                                 |
+|-------------------------|----------------------------------------------------|
+| `Java 17`               | Lenguaje base                                      |
+| `Spring Boot 3.5`       | Framework backend principal                        |
+| `Spring Web + JPA`      | Creación de API REST y conexión a la base de datos|
+| `PostgreSQL`            | Base de datos relacional                          |
+| `Docker / Docker Compose`| Entorno de desarrollo portable y automatizado     |
+| `Maven`                 | Sistema de construcción y dependencias            |
+| `React + Material UI`   | Frontend separado (repositorio aparte)            |
+| `@emoji-mart/react`     | Selector de emojis en publicaciones               |
+
+---
+
+## 📁 Estructura del backend
+
+```text
+red-social/
 ├── src/
 │   └── main/
-│       ├── java/com/paola/redsocial/
-│       │   ├── controller/        # Endpoints REST (usuarios, posts, likes)
-│       │   ├── model/             # Entidades: Usuario, Post, Like, Amistad
-│       │   ├── repository/        # Interfaces JPA
-│       │   └── RedSocialApp.java  # Clase main
+│       ├── java/com/paola/todo/
+│       │   ├── controller/          # Endpoints REST (usuarios, publicaciones)
+│       │   ├── model/               # Entidades: Usuario, Publicacion
+│       │   ├── repository/          # Interfaces JPA
+│       │   └── RedSocialApp.java    # Clase principal (main)
 │       └── resources/
-│           └── application.properties  # Config DB y Spring
-├── Dockerfile              # Imagen Docker de la app
-├── docker-compose.yml      # Orquesta app + PostgreSQL
-├── rebuild.ps1 / .sh       # Script para recompilar y levantar servicios
-├── pom.xml                 # Dependencias Maven
-└── README.md               # Este archivo ✨
+│           └── application.properties  # Configuración DB y puertos
+├── Dockerfile                # Imagen del backend
+├── docker-compose.yml        # Orquesta backend + PostgreSQL
+├── rebuild.ps1               # Script PowerShell para limpiar, compilar y correr
+├── pom.xml                   # Dependencias Maven
+└── README.md                 # Este archivo ✨
 ```
 
-🎨 Vista del frontend (en progreso)
-Un frontend sencillo que permite:
 
-Ver publicaciones en formato "feed"
 
-Dar likes con 💖
 
-Ver perfil de cada usuario
+---
 
-Agregar solicitudes de amistad (proximamente)
+## 🧪 Cómo levantar el proyecto (modo local remoto 🐳)
 
-✨ Autor
-Desarrollado por Paola Arreola (@PaooxDev) como parte de su portafolio fullstack 🚀
-Buscando oportunidades para seguir creciendo como desarrolladora backend o fullstack 💼💻
+1. Clona el repositorio:
 
+```
+git clone https://github.com/paola-arreola/red-social-backend.git
+cd red-social-backend 
+```
+2. Usa el script para compilar y levantar la app (si usas Windows PowerShell):
+```
+./rebuild.ps1
+```
+3. La app quedará disponible en:
+```
+🔗 API backend: http://localhost:8080
+📁 Carpeta de imágenes: http://localhost:8080/uploads/
+```
+4. Para resetear los contenedores, puedes usar:
+```
+docker-compose down -v
+```
+🧠 ¿Por qué es parte de mi portafolio?
+Demuestra habilidades fullstack reales, desde backend, base de datos hasta frontend.
+
+Uso profesional de herramientas como Spring Boot, Docker y PostgreSQL.
+
+Pensado como proyecto base para apps sociales, portfolios avanzados o MVPs.
+
+Desarrollado con 💙 por Paola Arreola (@PaooxDev)
+🌎 Buscando oportunidades como desarrolladora backend o fullstack Java / React.
+
+📬 Contacto: [LinkedIn](https://www.linkedin.com/in/paola-arreola-6442a9375/) | [GitHub](https://github.com/Paoox)
