@@ -143,5 +143,32 @@ public class PublicacionController {
         return ResponseEntity.ok(publicacionRepository.findAll());
     }
 
+    // 📌 Aumentar like en publicación
+    @PutMapping("/{id}/like")
+    public ResponseEntity<?> darLike(@PathVariable Long id) {
+        Optional<Publicacion> optional = publicacionRepository.findById(id);
+        if (optional.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Publicación no encontrada");
+        }
+
+        Publicacion publicacion = optional.get();
+        publicacion.setLikes(publicacion.getLikes() + 1);
+        return ResponseEntity.ok(publicacionRepository.save(publicacion));
+    }
+
+    // 📌 Aumentar reacción en publicación
+    @PutMapping("/{id}/reaccion")
+    public ResponseEntity<?> reaccionar(@PathVariable Long id) {
+        Optional<Publicacion> optional = publicacionRepository.findById(id);
+        if (optional.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Publicación no encontrada");
+        }
+
+        Publicacion publicacion = optional.get();
+        publicacion.setReacciones(publicacion.getReacciones() + 1);
+        return ResponseEntity.ok(publicacionRepository.save(publicacion));
+    }
+
+
 
 }
