@@ -51,10 +51,29 @@ public class UsuarioController {
 
     // Crear nuevo usuario con contraseña encriptada
     @PostMapping
-    public Usuario crearUsuario(@RequestBody Usuario usuario) {
-        usuario.setPassword(passwordEncoder.encode(usuario.getPassword()));
-        return usuarioRepository.save(usuario);
+    public ResponseEntity<?> crearUsuario(@RequestBody Usuario usuario) {
+        try {
+            if (usuarioRepository.existsByEmail(usuario.getEmail())) {
+                return ResponseEntity.status(HttpStatus.CONFLICT).body("email duplicado");
+            }
+
+            if (usuarioRepository.existsByNickname(usuario.getNickname())) {
+                return ResponseEntity.status(HttpStatus.CONFLICT).body("nickname duplicado");
+            }
+
+            usuario.setPassword(passwordEncoder.encode(usuario.getPassword()));
+            Usuario nuevo = usuarioRepository.save(usuario);
+            return ResponseEntity.ok(nuevo);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("❌ Error al crear usuario: " + e.getMessage());
+        }
     }
+
+
+
+
 
     // Actualizar un usuario
     @PutMapping("/{id}")
