@@ -1,4 +1,4 @@
-# 🌐 Mini Red Social - Backend Spring Boot + PostgreSQL + Docker
+# 🌐 Mini Red Social (Blah) - Backend Spring Boot + PostgreSQL + Docker
 
 Este es el **backend completo** de una mini red social desarrollada con **Java + Spring Boot 3.5**, conectada a **PostgreSQL** y contenerizada con **Docker**, como parte del portafolio profesional de **Paola Arreola (@PaooxDev)**.
 
@@ -6,31 +6,72 @@ Este es el **backend completo** de una mini red social desarrollada con **Java +
 
 ---
 
-## 🚀 Funcionalidades implementadas
+## ✅ Funcionalidades implementadas en el BACKEND
 
-✅ Crear, editar y eliminar publicaciones (con o sin imagen)  
-✅ Subida real de imágenes a la carpeta `/uploads`  
-✅ Visualización de publicaciones con imagen y emojis  
-✅ Reacciones y likes a publicaciones  
-✅ Vista de perfil personalizada (propio o de otro usuario)  
-✅ Gestión completa de usuarios con avatar  
-✅ Servido desde backend vía API REST  
-✅ Contenerizado con Docker (Spring + PostgreSQL)
+### 🧍‍♂️ Gestión de usuarios (`/usuarios`)
+
+- **Registro de usuario nuevo** con:
+    - Validación de email y nickname duplicados
+    - Encriptación de contraseña (BCrypt)
+    - Avatar aleatorio (`https://i.pravatar.cc`)
+    - Visualizaciones aleatorias
+    - Fecha de registro (`LocalDateTime`)
+
+- **Login de usuario** con:
+    - Verificación de credenciales
+    - Generación de JWT con `id`, `nombre`, `email`
+    - Respuesta con `usuarioSeguro` (sin password)
+
+- **Obtener todos los usuarios** (`GET /usuarios`)
+- **Obtener usuario por ID** (`GET /usuarios/{id}`)
+- **Actualizar usuario** (`PUT /usuarios/{id}`), incluyendo:
+    - Nombre, alias, teléfono, avatar, descripción
+    - Contraseña (solo si se envía una nueva)
+- **Eliminar usuario** (`DELETE /usuarios/{id}`)
+- **Reset de contraseña** (`PUT /usuarios/reset-password`)
+- **Verificación de existencia de email** (`GET /usuarios/email/{email}`)
 
 ---
 
+### ✨ Validaciones importantes
+
+- Email y nickname únicos (`existsByEmail`, `existsByNickname`)
+- Manejo correcto de errores `409 Conflict` por datos duplicados
+- Manejo de errores `500` con `try/catch` y logs detallados en consola
+
+---
+
+### 🐳 Infraestructura (Docker)
+
+- Contenerización con:
+    - `Dockerfile` para Spring Boot
+    - `docker-compose.yml` para backend + PostgreSQL
+
+---
+
+### 📂 Extras implementados en el backend
+
+- Formato limpio en controladores (con separación de lógica y DTOs mínimos como `LoginRequest`)
+- Control de CORS para permitir conexión desde el frontend (`http://localhost:5173`)
+- Rutas protegidas con JWT (excepto `/usuarios` y `/usuarios/login`)
+- Carpeta `uploads/` para manejo futuro de imágenes
+
+
 ## 🧰 Tecnologías utilizadas
 
-| Herramienta             | Rol en el proyecto                                 |
-|-------------------------|----------------------------------------------------|
-| `Java 17`               | Lenguaje base                                      |
-| `Spring Boot 3.5`       | Framework backend principal                        |
-| `Spring Web + JPA`      | Creación de API REST y conexión a la base de datos|
-| `PostgreSQL`            | Base de datos relacional                          |
-| `Docker / Docker Compose`| Entorno de desarrollo portable y automatizado     |
-| `Maven`                 | Sistema de construcción y dependencias            |
-| `React + Material UI`   | Frontend separado (repositorio aparte)            |
-| `@emoji-mart/react`     | Selector de emojis en publicaciones               |
+| Herramienta               | Rol en el proyecto                                 |
+|---------------------------|----------------------------------------------------|
+| `Java 17`                 | Lenguaje base                                      |
+| `Spring Boot 3.5`         | Framework backend principal                        |
+| `Spring Web + JPA`        | Creación de API REST y conexión a la base de datos |
+| `Spring Security 6.5`     | Seguridad                                          |
+| `Autenticación con JWT`   | Verificación de usuarios                           |
+| `PasswordEncoder (BCrypt)`| Encriptación de contraseñas                        |
+| `PostgreSQL`              | Base de datos relacional                           |
+| `Docker / Docker Compose` | Entorno de desarrollo portable y automatizado      |
+| `Maven`                   | Sistema de construcción y dependencias             |
+| `React + Material UI`     | Frontend separado (repositorio aparte)             |
+| `@emoji-mart/react`       | Selector de emojis en publicaciones                |
 
 ---
 
