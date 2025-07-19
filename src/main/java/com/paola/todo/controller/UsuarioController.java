@@ -1,23 +1,18 @@
 package com.paola.todo.controller;
-
 import com.paola.todo.model.Usuario;
 import com.paola.todo.repository.UsuarioRepository;
 import com.paola.todo.dto.LoginRequest;
-
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.*;
+import java.util.concurrent.ThreadLocalRandom;
 
 import io.jsonwebtoken.security.Keys;
 
@@ -49,7 +44,7 @@ public class UsuarioController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
-    // Crear nuevo usuario con contraseña encriptada
+    //creando nuevo usuario
     @PostMapping
     public ResponseEntity<?> crearUsuario(@RequestBody Usuario usuario) {
         try {
@@ -61,7 +56,24 @@ public class UsuarioController {
                 return ResponseEntity.status(HttpStatus.CONFLICT).body("nickname duplicado");
             }
 
+            // 🔐 Encriptar la contraseña
             usuario.setPassword(passwordEncoder.encode(usuario.getPassword()));
+
+            // 📆 Asignar fecha actual si no se envió
+            if (usuario.getFechaRegistro() == null) {
+                usuario.setFechaRegistro(LocalDateTime.now());
+            }
+
+            // 👀 Asignar visualizaciones aleatorias si están en null o 0
+            if (usuario.getVisualizaciones() == null || usuario.getVisualizaciones() == 0) {
+                usuario.setVisualizaciones(ThreadLocalRandom.current().nextInt(1, 100));
+            }
+
+            // 🧑‍🎨 Asignar avatar aleatorio si no lo enviaron
+            if (usuario.getAvatarUrl() == null || usuario.getAvatarUrl().isBlank()) {
+                usuario.setAvatarUrl("https://api.dicebear.com/6.x/thumbs/svg?seed=" + UUID.randomUUID());
+            }
+
             Usuario nuevo = usuarioRepository.save(usuario);
             return ResponseEntity.ok(nuevo);
         } catch (Exception e) {
@@ -70,6 +82,7 @@ public class UsuarioController {
                     .body("❌ Error al crear usuario: " + e.getMessage());
         }
     }
+
 
 
 
@@ -145,7 +158,12 @@ public class UsuarioController {
         usuarioSeguro.put("nickname", usuario.getNickname());
         usuarioSeguro.put("telefono", usuario.getTelefono());
         usuarioSeguro.put("avatarUrl", usuario.getAvatarUrl());
-        usuarioSeguro.put("fechaRegistro", usuario.getFechaRegistro().toString());
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        usuarioSeguro.put(
+                "fechaRegistro",
+                usuario.getFechaRegistro() != null ? usuario.getFechaRegistro().format(formatter) : ""
+        );
+
 
         Map<String, Object> response = new HashMap<>();
         response.put("token", token);

@@ -1,14 +1,14 @@
 package com.paola.todo.model;
-
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.AllArgsConstructor;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import java.time.LocalDateTime;
 import java.util.List;
+import java.lang.Integer;
+
 
 @Entity
 @Table(name = "usuarios")
@@ -36,7 +36,7 @@ public class Usuario {
 
     private String telefono;
 
-    private int visualizaciones;
+    private Integer visualizaciones;
 
     private LocalDateTime fechaRegistro;
 
