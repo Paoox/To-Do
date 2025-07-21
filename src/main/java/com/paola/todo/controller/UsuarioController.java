@@ -5,6 +5,7 @@ import com.paola.todo.dto.LoginRequest;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -20,7 +21,9 @@ import io.jsonwebtoken.security.Keys;
 @RequestMapping("/usuarios")
 public class UsuarioController {
 
-    private static final byte[] JWT_SECRET = Keys.secretKeyFor(SignatureAlgorithm.HS256).getEncoded();
+    @Value("${jwt.secret}")
+    private String jwtSecret;
+
     private final UsuarioRepository usuarioRepository;
 
     @Autowired
@@ -148,7 +151,7 @@ public class UsuarioController {
                 .claim("id", usuario.getId())
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + 86400000)) // 1 día
-                .signWith(Keys.hmacShaKeyFor(JWT_SECRET), SignatureAlgorithm.HS256)
+                .signWith(Keys.hmacShaKeyFor(jwtSecret.getBytes()), SignatureAlgorithm.HS256)
                 .compact();
 
         Map<String, Object> usuarioSeguro = new HashMap<>();
